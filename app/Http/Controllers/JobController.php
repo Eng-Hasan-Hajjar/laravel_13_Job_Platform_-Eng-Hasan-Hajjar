@@ -29,7 +29,7 @@ class JobController extends Controller
             ->inLocation($request->location)
             ->withSalaryBetween($request->salary_min, $request->salary_max)
             ->postedWithin($request->posted)
-            ->when($request->category, fn($q) => $q->whereIn('category_id', $request->category))
+           ->when($request->category, fn($q) => $q->whereIn('category_id', $request->category))
             ->when($request->experience, fn($q) => $q->whereIn('experience_level', $request->experience))
             ->when($request->sort === 'salary_high', fn($q) => $q->orderByDesc('salary_max'))
             ->when($request->sort === 'salary_low', fn($q) => $q->orderBy('salary_min'))

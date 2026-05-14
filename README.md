@@ -273,4 +273,4 @@ php artisan queue:work
 
 ---
 
-**Built with ❤️ for Aleppo University Graduation Project**
+**Built with ❤️ for  University Graduation Project**
