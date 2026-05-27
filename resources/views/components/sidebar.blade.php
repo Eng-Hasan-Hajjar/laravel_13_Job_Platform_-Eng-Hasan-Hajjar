@@ -97,7 +97,7 @@
                     <i class="fas fa-building"></i>
                     <span>{{ __('messages.company_profile') }}</span>
                 </a>
-                <a href="{{ route('company.reviews') }}" class="sidebar-item">
+                <a href="{{ route('company.reviews.index') }}" class="sidebar-item">
                     <i class="fas fa-star"></i>
                     <span>{{ __('messages.reviews') }}</span>
                 </a>
