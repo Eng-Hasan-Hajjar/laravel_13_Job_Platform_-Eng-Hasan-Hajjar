@@ -1,39 +1,42 @@
 <?php
 
-
-
-// ==========================================
-// app/Models/CompanyReview.php
-// ==========================================
- 
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Model;
- 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class CompanyReview extends Model
 {
     protected $fillable = [
-        'company_id', 'user_id',
-        'rating', 'title', 'body',
-        'pros', 'cons',
-        'is_anonymous', 'is_approved',
+        'company_id', 'user_id', 'reviewer_name',
+        'rating', 'title', 'body', 'pros', 'cons',
+        'is_approved',
     ];
- 
+
     protected $casts = [
-        'is_anonymous' => 'boolean',
-        'is_approved'  => 'boolean',
-        'rating'       => 'integer',
+        'rating'      => 'integer',
+        'is_approved' => 'boolean',
     ];
- 
-    public function company() { return $this->belongsTo(Company::class); }
- 
-    public function user() { return $this->belongsTo(User::class); }
- 
-    public function scopeApproved($query) { return $query->where('is_approved', true); }
- 
-    public function getReviewerNameAttribute(): string
+
+    // ── العلاقات ──────────────────────────────────────────────────
+    public function company(): BelongsTo
     {
-        return $this->is_anonymous ? __('messages.anonymous') : $this->user->name;
+        return $this->belongsTo(Company::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // ── Scopes ────────────────────────────────────────────────────
+    public function scopeApproved($query)
+    {
+        return $query->where('is_approved', true);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('is_approved', false);
     }
 }
-

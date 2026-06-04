@@ -1,83 +1,125 @@
 <?php
-// ==========================================
-// app/Models/User.php
-// ==========================================
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\{HasOne, HasMany, BelongsToMany};
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name', 'email', 'password', 'role',
-        'avatar', 'phone', 'bio', 'location',
-        'cv_path', 'cv_analyzed', 'skills',
-        'experience_level', 'preferred_job_types',
-        'preferred_locations', 'expected_salary',
-        'is_active', 'locale', 'last_seen_at',
+        'bio', 'phone', 'location', 'avatar',
+        'experience_level',
+        'skills',
+        'preferred_job_types',
+        'preferred_locations',
+        'expected_salary',
+        'cv_path', 'cv_analyzed',
+        'locale', 'is_active', 'last_seen_at',
+        'notification_preferences',
     ];
 
     protected $hidden = ['password', 'remember_token'];
 
+    // ── الحل: جميع حقول JSON مُعرَّفة صراحةً ──────────────────────
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'skills' => 'array',
-        'preferred_job_types' => 'array',
-        'preferred_locations' => 'array',
-        'cv_analyzed' => 'array',
-        'is_active' => 'boolean',
-        'last_seen_at' => 'datetime',
+        'email_verified_at'        => 'datetime',
+        'last_seen_at'             => 'datetime',
+        'password'                 => 'hashed',
+        'is_active'                => 'boolean',
+
+        // ← هذه الثلاثة هي مصدر أخطاء in_array()
+        'skills'                   => 'array',
+        'preferred_job_types'      => 'array',
+        'preferred_locations'      => 'array',
+
+        'cv_analyzed'              => 'array',
+        'notification_preferences' => 'array',
+        'expected_salary'          => 'decimal:2',
     ];
 
-    // ---- RELATIONSHIPS ----
+    // ══════════════════════════════════════════════════════════════
+    //  Accessors — ضمان إرجاع array دائماً حتى لو البيانات قديمة
+    // ══════════════════════════════════════════════════════════════
 
-    public function company()
+    public function getSkillsAttribute($value): array
+    {
+        return $this->decodeJsonField($value);
+    }
+
+    public function getPreferredJobTypesAttribute($value): array
+    {
+        return $this->decodeJsonField($value);
+    }
+
+    public function getPreferredLocationsAttribute($value): array
+    {
+        return $this->decodeJsonField($value);
+    }
+
+    public function getCvAnalyzedAttribute($value): ?array
+    {
+        if (empty($value)) return null;
+        if (is_array($value)) return $value;
+        $decoded = json_decode($value, true);
+        return json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+    }
+
+    /** Helper: يحوّل أي قيمة إلى array بأمان */
+    private function decodeJsonField($value): array
+    {
+        if (is_array($value))  return $value;
+        if (empty($value))     return [];
+
+        $decoded = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+
+        return array_filter(array_map('trim', explode(',', (string) $value)));
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  العلاقات
+    // ══════════════════════════════════════════════════════════════
+
+    public function company(): HasOne
     {
         return $this->hasOne(Company::class);
     }
 
-    public function jobApplications()
+    public function jobApplications(): HasMany
     {
         return $this->hasMany(JobApplication::class);
     }
 
-    public function savedJobs()
+    public function savedJobs(): BelongsToMany
     {
-        return $this->belongsToMany(Job::class, 'saved_jobs')->withTimestamps();
+        return $this->belongsToMany(Job::class, 'saved_jobs');
     }
 
-    public function notifications()
-    {
-        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')
-                    ->orderBy('created_at', 'desc');
-    }
+    // ══════════════════════════════════════════════════════════════
+    //  Role Helpers
+    // ══════════════════════════════════════════════════════════════
 
-    public function unreadNotifications()
-    {
-        return $this->notifications()->whereNull('read_at');
-    }
-
-    // ---- HELPERS ----
-
-    public function isAdmin(): bool  { return $this->role === 'admin'; }
+    public function isAdmin():   bool { return $this->role === 'admin'; }
     public function isCompany(): bool { return $this->role === 'company'; }
-    public function isUser(): bool   { return $this->role === 'user'; }
+    public function isUser():    bool { return $this->role === 'user'; }
 
-    public function getAvatarUrlAttribute(): string
-    {
-        if ($this->avatar) return \Storage::url($this->avatar);
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=2563eb&color=fff';
-    }
+    // ══════════════════════════════════════════════════════════════
+    //  Job Helpers
+    // ══════════════════════════════════════════════════════════════
 
     public function hasAppliedTo(Job $job): bool
     {
-        return $this->jobApplications()->where('job_id', $job->id)->exists();
+        return $this->jobApplications()
+                    ->where('job_id', $job->id)
+                    ->exists();
     }
 
     public function hasSaved(Job $job): bool
@@ -85,9 +127,18 @@ class User extends Authenticatable
         return $this->savedJobs()->where('job_id', $job->id)->exists();
     }
 
+    /** رابط الصورة الشخصية */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar
+            ? asset('storage/' . $this->avatar)
+            : null;
+    }
+
+    /** توصيات الوظائف عبر خدمة AI */
     public function getRecommendedJobs(int $limit = 10)
     {
-        return app(\App\Services\JobRecommendationService::class)
-               ->recommend($this, $limit);
+        return app(\App\Services\AI\JobRecommendationService::class)
+            ->recommend($this, $limit, true);
     }
 }

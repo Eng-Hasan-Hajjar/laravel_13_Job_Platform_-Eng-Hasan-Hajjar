@@ -3,24 +3,31 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-              // تسجيل محرك الاستدلال كـ singleton
-        $this->app->singleton(InferenceEngine::class);
-    }
+    public function register(): void {}
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-         Paginator::useBootstrapFive();
+        // ── تحديد صفحات لوحة التحكم تلقائياً (بدون تعديل كل View) ──
+        //
+        // أي صفحة تبدأ بـ: company.* أو admin.* أو user.* = لوحة تحكم
+        // باقي الصفحات = عامة مع فوتر
+        //
+        View::composer('*', function ($view) {
+            $name = $view->getName();
+
+            $isDashboard = str_starts_with($name, 'company.')
+                        || str_starts_with($name, 'admin.')
+                        || str_starts_with($name, 'user.')
+                        || in_array($name, [
+                            'notifications.index',
+                            'settings',
+                        ]);
+
+            $view->with('isDashboard', $isDashboard);
+        });
     }
 }
