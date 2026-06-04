@@ -91,6 +91,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Settings
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::patch('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
+
+     // ========== SETTINGS ROUTES (أضف هذا القسم أولاً) ==========
+    Route::prefix('settings')->name('settings.')->group(function () {
+       
+        Route::patch('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
+        Route::patch('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
+        Route::patch('/preferences', [SettingsController::class, 'updatePreferences'])->name('preferences.update');
+        Route::post('/avatar', [SettingsController::class, 'uploadAvatar'])->name('avatar.upload');
+        Route::delete('/account', [SettingsController::class, 'deleteAccount'])->name('delete-account');
+        Route::get('/export-data', [SettingsController::class, 'exportData'])->name('export-data');
+    });
+
+
 
     // Notifications
     Route::prefix('notifications')->name('notifications.')->group(function () {
@@ -223,5 +237,6 @@ Route::middleware('role:user')->prefix('user')->group(function () {
 Route::middleware('role:company')->prefix('company')->group(function () {
     Route::get('/applications/rank/{job}', [CompanyApplicationController::class, 'rankApi'])->name('company.applications.rank');
 });
+
 
 

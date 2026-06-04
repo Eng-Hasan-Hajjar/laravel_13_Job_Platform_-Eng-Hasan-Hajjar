@@ -200,7 +200,7 @@ body {
 
 .nav-icon-btn .badge {
     position: absolute;
-    top: -4px;
+    top: +4px;
     right: -4px;
     background: var(--danger);
     color: white;

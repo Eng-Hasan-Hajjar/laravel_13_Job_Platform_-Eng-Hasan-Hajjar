@@ -3,6 +3,12 @@
 
 @section('content')
 
+
+
+
+
+
+
 {{-- HERO SECTION --}}
 <section class="hero">
     <div class="hero-content">
@@ -10,8 +16,8 @@
         <p>{{ __('messages.hero_subtitle') }}</p>
 
         <div class="hero-search">
-            <i class="fas fa-search" style="color:var(--text-muted)"></i>
-            <input type="text" id="heroSearch"
+            <i class="fas fa-search" style="color:var(--text-muted); margin-top: 2%;"></i>
+            <input type="text" id="heroSearch" 
                    placeholder="{{ __('messages.search_placeholder') }}"
                    onkeypress="if(event.key==='Enter'){window.location='/jobs?q='+this.value}">
             <select id="heroLocation" style="border:none;background:none;color:var(--text-secondary);font-size:.875rem;outline:none;cursor:pointer;min-width:100px">
