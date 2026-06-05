@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('title', __('messages.recommended_jobs'))
 
 @section('content')
@@ -65,14 +66,24 @@
             <div class="grid grid-auto stagger">
                 @foreach($jobs as $job)
                     <div class="job-card animate-slide-up" style="position:relative">
-                        <!-- Match Score Badge -->
-                        @if(isset($job->ai_score) && $job->ai_score > 0)
-                                    <span style="position:absolute;top:.75rem;left:.75rem;background:linear-gradient(135deg,#10b981,#059669);
-                               color:white;padding:.25rem .75rem;border-radius:var(--radius-full);font-size:.75rem;font-weight:800;
-                               box-shadow:0 4px 12px rgba(16,185,129,.3)">
-                                        🎯 {{ round($job->ai_score) }}%
-                                    </span>
-                        @endif
+                     <!-- Match Score Badge -->
+@if(isset($job->ai_score) && $job->ai_score > 0)
+@php
+    $score = round($job->ai_score);
+    $bgColor = $score >= 70 ? 'linear-gradient(135deg,#10b981,#059669)' 
+             : ($score >= 40 ? 'linear-gradient(135deg,#f59e0b,#d97706)' 
+             : 'linear-gradient(135deg,#94a3b8,#64748b)');
+    $shadowColor = $score >= 70 ? 'rgba(16,185,129,.3)' 
+                 : ($score >= 40 ? 'rgba(245,158,11,.3)' 
+                 : 'rgba(148,163,184,.3)');
+@endphp
+<span style="position:absolute;top:.75rem;{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}:.75rem;
+       background:{{ $bgColor }};color:white;padding:.25rem .75rem;
+       border-radius:var(--radius-full);font-size:.75rem;font-weight:800;
+       box-shadow:0 4px 12px {{ $shadowColor }};z-index:3">
+    🎯 {{ $score }}%
+</span>
+@endif
                         @if($job->recommendation_score > 0)
                             <div style="position:absolute;top:.875rem;{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.875rem;z-index:2;
                                 background:{{ $job->recommendation_score >= 70 ? 'var(--success)' : ($job->recommendation_score >= 40 ? 'var(--warning)' : 'var(--primary)') }};
@@ -154,6 +165,10 @@
         @endif
 
         <!-- Improve Recommendations CTA -->
+
+
+
+
         @if($jobs->isNotEmpty())
             <div class="card" style="margin-top:2rem;text-align:center;padding:1.5rem">
                 <i class="fas fa-sliders-h"
