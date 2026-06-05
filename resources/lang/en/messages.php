@@ -772,4 +772,16 @@ return [
 
 
 
+
+'recommended_jobs'      => 'Recommended Jobs',
+'recommendations_desc'  => 'Hand-picked jobs based on your skills and experience',
+'match_score'           => 'Match Score',
+
+'new_opportunities'     => 'New Opportunities',
+'skills_matched'        => 'matched skills',
+'matched_skills'        => 'Matched Skills',
+
+
+
+
 ];

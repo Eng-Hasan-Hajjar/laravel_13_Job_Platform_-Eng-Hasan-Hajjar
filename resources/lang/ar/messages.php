@@ -782,6 +782,14 @@ return [
 'about'   => 'عن المنصة',
 'contact' => 'تواصل معنا',
 
+'recommended_jobs'      => 'الوظائف المقترحة لك',
+'recommendations_desc'  => 'وظائف مختارة بناءً على مهاراتك وخبرتك',
+'match_score'           => 'نتيجة التطابق',
+
+
+'new_opportunities'     => 'فرص جديدة',
+'skills_matched'        => 'مهارة مطابقة',
+'matched_skills'        => 'مهارات متطابقة',
 
 
 ];
