@@ -62,17 +62,7 @@
 
             <!-- Newsletter -->
             <div>
-                <h4 style="font-weight:700;font-size:.9rem;margin-bottom:1rem;color:var(--text-primary)">{{ __('messages.stay_updated') }}</h4>
-                <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:.875rem;line-height:1.6">
-                    {{ __('messages.newsletter_desc') }}
-                </p>
-                <div style="display:flex;gap:.375rem">
-                    <input type="email" class="form-control" style="font-size:.8rem"
-                           placeholder="{{ __('messages.your_email') }}">
-                    <button class="btn btn-primary btn-sm" style="white-space:nowrap;flex-shrink:0">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
+              
             </div>
         </div>
 

@@ -49,8 +49,12 @@ class RegisterController extends Controller
         Auth::login($user);
  
         // Send welcome notification
-        $user->notify(new \App\Notifications\WelcomeNotification($user));
- 
+   //     $user->notify(new \App\Notifications\WelcomeNotification($user));
+ try {
+    $user->notify(new \App\Notifications\WelcomeNotification($user));
+} catch (\Exception $e) {
+    \Log::warning('Welcome notification failed: ' . $e->getMessage());
+}
         $redirect = $request->role === 'company'
             ? route('company.profile')
             : route('user.profile');

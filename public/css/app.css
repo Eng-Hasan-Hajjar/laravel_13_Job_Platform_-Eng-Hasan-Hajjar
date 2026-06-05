@@ -1328,3 +1328,188 @@ tbody tr:hover { background: var(--bg-hover); }
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-full); }
 *::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+
+
+
+/* ============================================
+   إصلاحات السايدبار وزر القائمة
+   أضف هذا الملف بعد app.css مباشرة
+   ============================================ */
+
+/* إخفاء زر القائمة على الشاشات الكبيرة، إظهاره فقط على الموبايل */
+.d-md-none { display: none !important; }
+.d-none    { display: none !important; }
+
+@media (max-width: 768px) {
+    .d-md-none { display: flex !important; }
+    .d-md-block { display: none !important; }
+}
+@media (min-width: 769px) {
+    .d-md-block { display: block !important; }
+    .d-none.d-md-block { display: block !important; }
+}
+
+/* السايدبار: مخفي افتراضياً على الموبايل، ظاهر على الديسктоп */
+@media (min-width: 769px) {
+    .sidebar { transform: none !important; }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1050;
+        box-shadow: var(--shadow-xl);
+    }
+    [dir="rtl"] .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0) !important; }
+
+    /* المحتوى يأخذ العرض الكامل على الموبايل */
+    .main-content.has-sidebar { margin-left: 0 !important; margin-right: 0 !important; }
+}
+
+/* overlay عند فتح السايدبار على الموبايل */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+}
+.sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media (max-width: 1199px) {
+    .has-sidebar .responsive-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ============================================
+   إصلاحات السايدبار وزر القائمة
+   أضف هذا الملف بعد app.css مباشرة
+   ============================================ */
+
+/* إخفاء زر القائمة على الشاشات الكبيرة، إظهاره فقط على الموبايل */
+.d-md-none { display: none !important; }
+.d-none    { display: none !important; }
+
+@media (max-width: 768px) {
+    .d-md-none { display: flex !important; }
+    .d-md-block { display: none !important; }
+}
+@media (min-width: 769px) {
+    .d-md-block { display: block !important; }
+    .d-none.d-md-block { display: block !important; }
+}
+
+/* السايدبار: مخفي افتراضياً على الموبايل، ظاهر على الديسктоп */
+@media (min-width: 769px) {
+    .sidebar { transform: none !important; }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1050;
+        box-shadow: var(--shadow-xl);
+    }
+    [dir="rtl"] .sidebar { transform: translateX(100%); }
+    .sidebar.open { transform: translateX(0) !important; }
+
+    /* المحتوى يأخذ العرض الكامل على الموبايل */
+    .main-content.has-sidebar { margin-left: 0 !important; margin-right: 0 !important; }
+}
+
+/* overlay عند فتح السايدبار على الموبايل */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+}
+.sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ============================================
+   إصلاح تصميم الصفحات ذات العمودين مع السايدبار
+   ============================================ */
+
+/* صفحة تفاصيل الوظيفة + صفحة الشركة + أي grid بعمودين */
+.main-content.has-sidebar .page-container [style*="grid-template-columns: 1fr 320px"],
+.main-content.has-sidebar .page-container [style*="grid-template-columns:1fr 320px"] {
+    grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 1200px) {
+    .main-content.has-sidebar .page-container [style*="grid-template-columns: 1fr 320px"],
+    .main-content.has-sidebar .page-container [style*="grid-template-columns:1fr 320px"] {
+        grid-template-columns: 1fr 300px !important;
+    }
+}
+
+/* صفحة الوظائف: الفلاتر + القائمة */
+.main-content.has-sidebar .page-container [style*="grid-template-columns: 280px 1fr"],
+.main-content.has-sidebar .page-container [style*="grid-template-columns:280px 1fr"] {
+    grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 1200px) {
+    .main-content.has-sidebar .page-container [style*="grid-template-columns: 280px 1fr"],
+    .main-content.has-sidebar .page-container [style*="grid-template-columns:280px 1fr"] {
+        grid-template-columns: 240px 1fr !important;
+    }
+}
+
+/* منع النصوص الطويلة من كسر التصميم */
+.main-content .card-body {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.main-content .card-body p,
+.main-content .card-body div {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* إصلاح sticky sidebar في صفحة التفاصيل */
+.main-content.has-sidebar [style*="position:sticky"] {
+    position: static !important;
+}
+
+@media (min-width: 1200px) {
+    .main-content.has-sidebar [style*="position:sticky"] {
+        position: sticky !important;
+    }
+}
+
+
+/* ── إصلاح البحث في الـ Hero في الوضع الداكن ── */
+[data-theme="dark"] .hero-search input,
+[data-theme="dark"] .hero-search select {
+    background: rgba(255,255,255,0.95) !important;
+    color: #1e293b !important;
+    border-color: rgba(255,255,255,0.3) !important;
+}
+
+[data-theme="dark"] .hero-search input::placeholder {
+    color: #64748b !important;
+}
+
+[data-theme="dark"] .hero-search input:focus {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.2) !important;
+}
+

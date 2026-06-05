@@ -710,4 +710,63 @@ return [
  'reviews_will_appear_here'=> 'reviews will appear here ',
  'all_reviews'=>'all reviews',
  'rating_distribution'=>'rating distribution',
+ 'about'=>'About ',
+
+    
+    'reviews_for'            => 'Reviews for :name',
+    'export_reviews'         => 'Export Reviews',
+    'average_rating'         => 'Average Rating',
+    'current_month_rating'   => 'Current Month Rating',
+
+
+
+
+    'pending_review'         => 'Pending Review',
+    'approved'               => 'Approved',
+    'reply'                  => 'Reply',
+    'respond_to_review'      => 'Respond to Review',
+    'review_approved'        => 'Review approved',
+    'review_rejected'        => 'Review rejected',
+    'review_deleted'         => 'Review deleted',
+ 
+    // ── Public Companies Page ───────────────────────────────────
+'notification_marked_read'  => 'Notification marked as read',
+'notification_marked_all'   => 'All notifications marked as read',
+
+
+
+'profile_information'    => 'Profile Information',
+'avatar'                 => 'Avatar',
+'change_avatar'          => 'Change Avatar',
+'name'                   => 'Name',
+
+'data'                   => 'Data',
+'export_data'            => 'Export Data',
+
+// Preferences
+'timezone'                    => 'Timezone',
+'job_alerts'                  => 'Job Alerts',
+'job_alerts_desc'             => 'Receive notifications when jobs matching your profile are posted',
+'newsletter'                  => 'Newsletter',
+
+// Password
+'password_requirements'       => 'Password must be at least 8 characters with an uppercase letter and a number',
+
+// Notifications
+'email_notifications'         => 'Email Notifications',
+'email_notifications_desc'    => 'Receive notifications via email',
+'push_notifications'          => 'Push Notifications',
+'push_notifications_desc'     => 'Receive instant browser notifications',
+'save_notifications'          => 'Save Notification Settings',
+
+// Data
+'your_data'                   => 'Your Data',
+'export_your_data'            => 'Export Your Data',
+'export_data_desc'            => 'Download a copy of all your data stored on the platform',
+
+// Danger Zone
+'type_delete_to_confirm'      => 'Type DELETE to confirm',
+'permanently_delete_account'  => 'Permanently Delete Account',
+'about'   => 'About Us',
+'contact' => 'Contact Us',
 ];

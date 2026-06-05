@@ -712,4 +712,73 @@ return [
  'reviews_will_appear_here'=> 'ستظهر التقييمات هنا ',
  'all_reviews'=>'جميع التقييمات',
  'rating_distribution'=>'توزيع التقييمات',
+ 'about'=>' حول',
+    
+    'reviews_for'          => 'تقييمات :name',
+    'export_reviews'       => 'تصدير التقييمات',
+    'average_rating'       => 'التقييم العام',
+    'current_month_rating' => 'تقييم الشهر الحالي',
+
+
+
+
+    
+   
+    'reviews_will_appear'    => 'ستظهر التقييمات هنا',
+ 
+
+    'only_users_can_review'  => 'فقط الباحثون عن عمل يمكنهم تقييم الشركات',
+ 
+ 'pending_review'         => 'بانتظار المراجعة',
+    'approved'               => 'موافق عليه',
+    'reply'                  => 'الرد',
+    'respond_to_review'      => 'الرد على التقييم',
+    'review_approved'        => 'تم قبول التقييم',
+    'review_rejected'        => 'تم رفض التقييم',
+    'review_deleted'         => 'تم حذف التقييم',
+ 
+
+
+
+
+
+'notification_marked_read'  => 'تم تعيين الإشعار كمقروء',
+'notification_marked_all'   => 'تم تعيين جميع الإشعارات كمقروءة',
+
+
+
+
+'profile_information'    => 'معلومات الملف الشخصي',
+'avatar'                 => 'الصورة الشخصية',
+'change_avatar'          => 'تغيير الصورة',
+'name'                   => 'الاسم',
+
+'data'                   => 'البيانات',
+'export_data'            => 'تصدير البيانات',
+// التفضيلات
+'timezone'                    => 'المنطقة الزمنية',
+'job_alerts'                  => 'تنبيهات الوظائف',
+'job_alerts_desc'             => 'استلم إشعارات عند نشر وظائف تطابق ملفك الشخصي',
+'newsletter'                  => 'النشرة البريدية',
+
+// كلمة المرور
+'password_requirements'       => 'يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على حرف كبير ورقم',
+
+// الإشعارات
+'email_notifications'         => 'إشعارات البريد الإلكتروني',
+'email_notifications_desc'    => 'استلم الإشعارات عبر البريد الإلكتروني',
+'push_notifications'          => 'الإشعارات الفورية',
+'push_notifications_desc'     => 'استلم إشعارات فورية في المتصفح',
+'save_notifications'          => 'حفظ إعدادات الإشعارات',
+
+// البيانات
+'your_data'                   => 'بياناتك',
+'export_your_data'            => 'تصدير بياناتك',
+'export_data_desc'            => 'حمّل نسخة من جميع بياناتك المخزنة في المنصة',
+
+// منطقة الخطر
+'type_delete_to_confirm'      => 'اكتب DELETE للتأكيد',
+'permanently_delete_account'  => 'حذف الحساب نهائياً',
+'about'   => 'عن المنصة',
+'contact' => 'تواصل معنا',
 ];

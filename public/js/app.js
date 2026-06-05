@@ -553,3 +553,13 @@ document.addEventListener('DOMContentLoaded', () => {
 window.ThemeManager = ThemeManager;
 window.NotificationManager = NotificationManager;
 window.Confirm = Confirm;
+
+
+// Fix grid layout when sidebar exists
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.querySelector('.sidebar')) {
+        document.querySelectorAll('[style*="grid-template-columns"]').forEach(el => {
+            el.classList.add('responsive-grid');
+        });
+    }
+});
