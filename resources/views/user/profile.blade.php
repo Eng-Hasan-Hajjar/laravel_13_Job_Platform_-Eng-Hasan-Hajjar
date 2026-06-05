@@ -279,7 +279,7 @@
 
                         <div style="margin-top:1.25rem;padding:.75rem;background:var(--bg-hover);border-radius:var(--radius);font-size:.75rem;color:var(--text-muted)">
                             <i class="fas fa-clock"></i>
-                            {{ __('messages.analyzed_at') }}: {{ \Carbon\Carbon::parse($analysis['analyzed_at'])->format('d M Y H:i') }}
+                            {{ __('messages.analyzed_at') }}: {{ isset($analysis['analyzed_at']) ? \Carbon\Carbon::parse($analysis['analyzed_at'])->format('d M Y H:i') : __('messages.recently') }}
                         </div>
                     </div>
                 </div>

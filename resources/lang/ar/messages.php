@@ -781,4 +781,7 @@ return [
 'permanently_delete_account'  => 'حذف الحساب نهائياً',
 'about'   => 'عن المنصة',
 'contact' => 'تواصل معنا',
+
+
+
 ];

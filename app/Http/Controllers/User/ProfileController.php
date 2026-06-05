@@ -114,41 +114,52 @@ class ProfileController extends Controller
         return back()->with('success', __('messages.update_password') . ' ✓');
     }
  
-    public function uploadCv(Request $request)
-    {
-        $request->validate(['cv_file' => 'required|file|mimes:pdf,doc,docx|max:5120']);
- 
-        $user = auth()->user();
-        if ($user->cv_path) Storage::disk('private')->delete($user->cv_path);
- 
-        $path = $request->file('cv_file')->store('cvs/' . $user->id, 'private');
-        $user->update(['cv_path' => $path, 'cv_analyzed' => null]);
- 
-        // Dispatch background analysis
-        dispatch(new \App\Jobs\AnalyzeCvJob($user));
- 
-        return back()->with('success', __('messages.upload_cv') . ' ✓');
+  public function uploadCv(Request $request)
+{
+    $request->validate(['cv_file' => 'required|file|mimes:pdf,doc,docx|max:5120']);
+
+    $user = auth()->user();
+    if ($user->cv_path) Storage::disk('local')->delete($user->cv_path);
+
+    $path = $request->file('cv_file')->store('cvs/' . $user->id, 'local');
+    $user->update(['cv_path' => $path, 'cv_analyzed' => null]);
+
+
+   // app(\App\Services\CvAnalysisService::class)->analyzeUser($user);
+
+
+    // ← تحليل مباشر بدل dispatch
+    try {
+        app(\App\Services\CvAnalysisService::class)->analyzeUser($user);
+    } catch (\Exception $e) {
+        \Log::warning('CV analysis failed: ' . $e->getMessage());
     }
+
+    return back()->with('success', __('messages.cv_uploaded_success'));
+}
  
     public function downloadCv()
     {
         $user = auth()->user();
         abort_if(!$user->cv_path, 404);
-        return Storage::disk('private')->download($user->cv_path, 'CV-' . $user->name . '.pdf');
+        return Storage::disk('local')->download($user->cv_path, 'CV-' . $user->name . '.pdf');
     }
  
     public function deleteCv()
     {
         $user = auth()->user();
-        if ($user->cv_path) Storage::disk('private')->delete($user->cv_path);
+        if ($user->cv_path) Storage::disk('local')->delete($user->cv_path);
         $user->update(['cv_path' => null, 'cv_analyzed' => null]);
         return back()->with('success', 'CV deleted');
     }
  
     public function savedJobs()
     {
+     $savedJobs = auth()->user()->savedJobs()
+        ->with(['company', 'category'])
+        ->paginate(12);
         $jobs = auth()->user()->savedJobs()->with(['company', 'category'])->paginate(12);
-        return view('user.saved-jobs', compact('jobs'));
+        return view('user.saved-jobs', compact('jobs','savedJobs'));
     }
  
     private function calculateCompleteness($user): int
@@ -164,6 +175,9 @@ class ProfileController extends Controller
         }
         return (int) round(($filled / count($fields)) * 100);
     }
+
+
+    
 }
  
 

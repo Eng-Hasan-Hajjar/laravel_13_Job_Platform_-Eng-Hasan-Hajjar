@@ -769,4 +769,7 @@ return [
 'permanently_delete_account'  => 'Permanently Delete Account',
 'about'   => 'About Us',
 'contact' => 'Contact Us',
+
+
+
 ];

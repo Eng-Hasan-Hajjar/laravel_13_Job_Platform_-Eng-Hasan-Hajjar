@@ -55,36 +55,41 @@ class CvAnalysisService
         }
     }
 
-    public function analyzeUser(User $user): void
-    {
-        if (!$user->cv_path) return;
+public function analyzeUser(User $user): void
+{
+    if (!$user->cv_path) return;
 
-        $fullPath = storage_path('app/private/' . $user->cv_path);
-        if (!file_exists($fullPath)) return;
-
-        $analysis = $this->analyzePdf($fullPath);
-        $user->update([
-            'cv_analyzed' => $analysis,
-            'skills'      => $analysis['technical_skills'] ?? [],
-        ]);
+    // ← استخدم Storage facade للحصول على المسار الصحيح
+    $fullPath = \Storage::disk('local')->path($user->cv_path);
+    
+    if (!file_exists($fullPath)) {
+        Log::warning('CV file not found: ' . $fullPath);
+        return;
     }
 
-    private function extractText(string $filePath): string
-    {
-        $fullPath = storage_path('app/private/' . $filePath);
+    $analysis = $this->analyzePdf($fullPath);
+    $user->update([
+        'cv_analyzed' => $analysis,
+        'skills'      => $analysis['technical_skills'] ?? [],
+    ]);
+}
 
-        $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
 
-        if ($extension === 'pdf') {
-            return $this->extractFromPdf($fullPath);
-        }
+ private function extractText(string $filePath): string
+{
+    // ← filePath هنا هو المسار الكامل بالفعل، لا تضف storage_path مرة أخرى
+    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
-        if (in_array($extension, ['doc', 'docx'])) {
-            return $this->extractFromWord($fullPath);
-        }
-
-        throw new \InvalidArgumentException("Unsupported file type: {$extension}");
+    if ($extension === 'pdf') {
+        return $this->extractFromPdf($filePath);
     }
+
+    if (in_array($extension, ['doc', 'docx'])) {
+        return $this->extractFromWord($filePath);
+    }
+
+    throw new \InvalidArgumentException("Unsupported file type: {$extension}");
+}
 
     private function extractFromPdf(string $path): string
     {
@@ -249,102 +254,5 @@ class CvAnalysisService
         if ($wordCount > 600) $score += 5;
 
         return min(100, $score);
-    }
-}
-
-// ==========================================
-// app/Services/JobRecommendationService.php
-// ==========================================
-namespace App\Services;
-
-use App\Models\User;
-use App\Models\Job;
-
-class JobRecommendationService
-{
-    public function recommend(User $user, int $limit = 10)
-    {
-        $userSkills   = $user->skills ?? [];
-        $userLocation = $user->location;
-        $userTypes    = $user->preferred_job_types ?? [];
-        $userLocations= $user->preferred_locations ?? [];
-
-        // Score-based recommendation
-        $jobs = Job::with(['company', 'category'])
-            ->active()
-            ->where('company_id', '!=', optional($user->company)->id)
-            ->get()
-            ->map(function ($job) use ($user, $userSkills, $userLocation, $userTypes, $userLocations) {
-                $score = 0;
-
-                // Skill match
-                $jobSkills = $job->skills ?? [];
-                if (!empty($jobSkills) && !empty($userSkills)) {
-                    $matchedSkills = array_intersect(
-                        array_map('mb_strtolower', $jobSkills),
-                        array_map('mb_strtolower', $userSkills)
-                    );
-                    $score += count($matchedSkills) * 15;
-                }
-
-                // Location preference
-                if (!empty($userLocations) && in_array($job->location, $userLocations)) {
-                    $score += 20;
-                } elseif ($userLocation && str_contains(mb_strtolower($job->location), mb_strtolower($userLocation))) {
-                    $score += 10;
-                }
-
-                // Job type preference
-                if (!empty($userTypes) && in_array($job->type, $userTypes)) {
-                    $score += 15;
-                }
-
-                // Experience match
-                if ($user->experience_level === $job->experience_level) {
-                    $score += 20;
-                }
-
-                // Remote preference
-                if ($job->is_remote) $score += 5;
-
-                // Salary match
-                if ($user->expected_salary && $job->salary_max >= $user->expected_salary) {
-                    $score += 10;
-                }
-
-                // Recency bonus
-                $daysOld = $job->created_at->diffInDays();
-                if ($daysOld <= 3)       $score += 15;
-                elseif ($daysOld <= 7)   $score += 10;
-                elseif ($daysOld <= 14)  $score += 5;
-
-                // Featured bonus
-                if ($job->is_featured) $score += 5;
-
-                $job->recommendation_score = $score;
-                return $job;
-            })
-            ->filter(fn($job) => $job->recommendation_score > 0)
-            ->sortByDesc('recommendation_score')
-            ->take($limit)
-            ->values();
-
-        // If not enough recommendations, pad with latest jobs
-        if ($jobs->count() < $limit) {
-            $existingIds = $jobs->pluck('id')->toArray();
-            $extra = Job::with(['company', 'category'])
-                ->active()
-                ->whereNotIn('id', $existingIds)
-                ->latest()
-                ->limit($limit - $jobs->count())
-                ->get()
-                ->map(function ($job) {
-                    $job->recommendation_score = 0;
-                    return $job;
-                });
-            $jobs = $jobs->merge($extra);
-        }
-
-        return $jobs;
     }
 }
