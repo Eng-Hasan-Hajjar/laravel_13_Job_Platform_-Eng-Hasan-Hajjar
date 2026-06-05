@@ -77,7 +77,7 @@
                  : ($score >= 40 ? 'rgba(245,158,11,.3)' 
                  : 'rgba(148,163,184,.3)');
 @endphp
-<span style="position:absolute;top:.75rem;{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}:.75rem;
+<span style="position:absolute;top:.75rem;{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.75rem;
        background:{{ $bgColor }};color:white;padding:.25rem .75rem;
        border-radius:var(--radius-full);font-size:.75rem;font-weight:800;
        box-shadow:0 4px 12px {{ $shadowColor }};z-index:3">
