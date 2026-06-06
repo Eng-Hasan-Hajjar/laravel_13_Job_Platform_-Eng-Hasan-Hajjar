@@ -792,4 +792,119 @@ return [
 'matched_skills'        => 'مهارات متطابقة',
 
 
+
+
+
+'live_statistics'   => 'الإحصائيات الحية',
+'powered_by_nodejs' => 'مدعوم بـ',
+
+
+'view_live' => 'عرض مباشر',
+
+
+
+
+ 
+'users_management'          => 'إدارة المستخدمين',
+'manage_all_users'          => 'إدارة جميع المستخدمين في النظام',
+'companies_management'      => 'إدارة الشركات',
+'manage_all_companies'      => 'إدارة جميع الشركات المسجلة',
+'jobs_management'           => 'إدارة الوظائف',
+'manage_all_jobs'           => 'إدارة جميع الوظائف المنشورة',
+'broadcast_notifications'   => 'إشعارات جماعية',
+'broadcast_notifications_desc' => 'إرسال إشعارات لجميع المستخدمين',
+'system_settings'           => 'إعدادات النظام',
+'system_settings_desc'      => 'معلومات النظام والإحصائيات',
+'system_information'        => 'معلومات النظام',
+'platform_overview'         => 'نظرة عامة على المنصة',
+'maintenance'               => 'الصيانة',
+ 
+'search_users'              => 'بحث في المستخدمين...',
+'search_companies'          => 'بحث في الشركات...',
+'all_roles'                 => 'كل الأدوار',
+'all_statuses'              => 'كل الحالات',
+'all_types'                 => 'كل الأنواع',
+'admins'                    => 'المدراء',
+'admin'                     => 'مدير',
+'user'                      => 'مستخدم',
+'company'                   => 'شركة',
+'contact'                   => 'الاتصال',
+'role'                      => 'الدور',
+'status'                    => 'الحالة',
+'joined'                    => 'انضم في',
+'last_seen'                 => 'آخر ظهور',
+'inactive'                  => 'غير نشط',
+'unverified'                => 'غير موثقة',
+'unverify'                  => 'إلغاء التوثيق',
+'verify'                    => 'توثيق',
+'company_info'              => 'معلومات الشركة',
+'recent_jobs'               => 'أحدث الوظائف',
+'recent_applications'       => 'أحدث الطلبات',
+'employees'                 => 'الموظفون',
+'founded'                   => 'تأسست عام',
+'owner'                     => 'المالك',
+'website'                   => 'الموقع الإلكتروني',
+'industry'                  => 'الصناعة',
+'reviews'                   => 'التقييمات',
+ 
+'back_to_users'             => 'العودة إلى المستخدمين',
+'back_to_companies'         => 'العودة إلى الشركات',
+'view'                      => 'عرض',
+'activate'                  => 'تفعيل',
+'deactivate'                => 'تعطيل',
+'feature'                   => 'تمييز',
+'unfeature'                 => 'إلغاء التمييز',
+ 
+'sort_name'                 => 'حسب الاسم',
+'most_jobs'                 => 'الأكثر وظائف',
+'most_applications'         => 'الأكثر طلبات',
+'most_views'                => 'الأكثر مشاهدة',
+ 
+'no_users_found'            => 'لا يوجد مستخدمون',
+'no_companies_found'        => 'لا توجد شركات',
+ 
+'user_activated'            => 'تم تفعيل المستخدم',
+'user_deactivated'          => 'تم تعطيل المستخدم',
+'user_deleted'              => 'تم حذف المستخدم',
+'delete_user_confirm'       => 'هل أنت متأكد من حذف هذا المستخدم؟',
+'cannot_disable_self'       => 'لا يمكنك تعطيل حسابك الشخصي',
+'cannot_delete_self'        => 'لا يمكنك حذف حسابك الشخصي',
+ 
+'company_verified'          => 'تم توثيق الشركة',
+'company_unverified'        => 'تم إلغاء توثيق الشركة',
+'company_deleted'           => 'تم حذف الشركة',
+'delete_company_confirm'    => 'هل أنت متأكد من حذف هذه الشركة؟',
+ 
+'job_featured'              => 'تم تمييز الوظيفة',
+'job_unfeatured'            => 'تم إلغاء تمييز الوظيفة',
+'job_deleted'               => 'تم حذف الوظيفة',
+'delete_job_confirm'        => 'هل أنت متأكد من حذف هذه الوظيفة؟',
+ 
+'send_notification'         => 'إرسال إشعار',
+'target_audience'           => 'الفئة المستهدفة',
+'all_users'                 => 'جميع المستخدمين',
+'job_seekers_only'          => 'الباحثون عن عمل فقط',
+'companies_only'            => 'الشركات فقط',
+'notification_title_placeholder' => 'مثال: تحديث جديد على المنصة',
+'notification_body_placeholder'  => 'اكتب نص الإشعار هنا...',
+'message'                   => 'الرسالة',
+'action_url'                => 'رابط الإجراء',
+'optional'                  => 'اختياري',
+'send_to_all'               => 'إرسال للجميع',
+'reach_everyone'            => 'الوصول للجميع',
+'broadcast_info'            => 'يمكنك إرسال إشعارات جماعية لجميع المستخدمين أو فئة محددة منهم. ستصل الإشعارات فوراً.',
+'guidelines'                => 'الإرشادات',
+'guideline_1'               => 'استخدم عناوين واضحة ومختصرة',
+'guideline_2'               => 'تأكد من صحة المعلومات قبل الإرسال',
+'guideline_3'               => 'حدد الفئة المستهدفة بدقة',
+'guideline_4'               => 'لا يمكن التراجع عن الإشعارات المُرسلة',
+ 
+'clear_cache'               => 'مسح الذاكرة المؤقتة',
+'optimize'                  => 'تحسين الأداء',
+'run_migrations'            => 'تشغيل الهجرات',
+'live_stats'                => 'الإحصائيات الحية',
+ 
+
+
+'title'=> 'عنوان'
 ];

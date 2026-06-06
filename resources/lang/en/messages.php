@@ -783,5 +783,115 @@ return [
 
 
 
+'live_statistics'   => 'Live Statistics',
+'powered_by_nodejs' => 'Powered by',
 
+
+'view_live' => 'View Live',
+
+
+
+
+
+'users_management'          => 'Users Management',
+'manage_all_users'          => 'Manage all users in the system',
+'companies_management'      => 'Companies Management',
+'manage_all_companies'      => 'Manage all registered companies',
+'jobs_management'           => 'Jobs Management',
+'manage_all_jobs'           => 'Manage all posted jobs',
+'broadcast_notifications'   => 'Broadcast Notifications',
+'broadcast_notifications_desc' => 'Send notifications to all users',
+'system_settings'           => 'System Settings',
+'system_settings_desc'      => 'System information and statistics',
+'system_information'        => 'System Information',
+'platform_overview'         => 'Platform Overview',
+'maintenance'               => 'Maintenance',
+ 
+'search_users'              => 'Search users...',
+'search_companies'          => 'Search companies...',
+'all_roles'                 => 'All Roles',
+'all_statuses'              => 'All Statuses',
+'all_types'                 => 'All Types',
+'admins'                    => 'Admins',
+'admin'                     => 'Admin',
+'user'                      => 'User',
+'company'                   => 'Company',
+'contact'                   => 'Contact',
+'role'                      => 'Role',
+'status'                    => 'Status',
+'joined'                    => 'Joined',
+'last_seen'                 => 'Last Seen',
+'inactive'                  => 'Inactive',
+'unverified'                => 'Unverified',
+'unverify'                  => 'Unverify',
+'verify'                    => 'Verify',
+'company_info'              => 'Company Information',
+'recent_jobs'               => 'Recent Jobs',
+'recent_applications'       => 'Recent Applications',
+'employees'                 => 'Employees',
+'founded'                   => 'Founded',
+'owner'                     => 'Owner',
+'website'                   => 'Website',
+'industry'                  => 'Industry',
+'reviews'                   => 'Reviews',
+ 
+'back_to_users'             => 'Back to Users',
+'back_to_companies'         => 'Back to Companies',
+'view'                      => 'View',
+'activate'                  => 'Activate',
+'deactivate'                => 'Deactivate',
+'feature'                   => 'Feature',
+'unfeature'                 => 'Unfeature',
+ 
+'sort_name'                 => 'By Name',
+'most_jobs'                 => 'Most Jobs',
+'most_applications'         => 'Most Applications',
+'most_views'                => 'Most Viewed',
+ 
+'no_users_found'            => 'No users found',
+'no_companies_found'        => 'No companies found',
+ 
+'user_activated'            => 'User activated',
+'user_deactivated'          => 'User deactivated',
+'user_deleted'              => 'User deleted',
+'delete_user_confirm'       => 'Are you sure you want to delete this user?',
+'cannot_disable_self'       => 'You cannot disable your own account',
+'cannot_delete_self'        => 'You cannot delete your own account',
+ 
+'company_verified'          => 'Company verified',
+'company_unverified'        => 'Company unverified',
+'company_deleted'           => 'Company deleted',
+'delete_company_confirm'    => 'Are you sure you want to delete this company?',
+ 
+'job_featured'              => 'Job featured',
+'job_unfeatured'            => 'Job unfeatured',
+'job_deleted'               => 'Job deleted',
+'delete_job_confirm'        => 'Are you sure you want to delete this job?',
+ 
+'send_notification'         => 'Send Notification',
+'target_audience'           => 'Target Audience',
+'all_users'                 => 'All Users',
+'job_seekers_only'          => 'Job Seekers Only',
+'companies_only'            => 'Companies Only',
+'notification_title_placeholder' => 'e.g., New platform update',
+'notification_body_placeholder'  => 'Type your notification message here...',
+'message'                   => 'Message',
+'action_url'                => 'Action URL',
+'optional'                  => 'Optional',
+'send_to_all'               => 'Send to All',
+'reach_everyone'            => 'Reach Everyone',
+'broadcast_info'            => 'You can send broadcast notifications to all users or a specific group. Notifications will be delivered instantly.',
+'guidelines'                => 'Guidelines',
+'guideline_1'               => 'Use clear and concise titles',
+'guideline_2'               => 'Verify information before sending',
+'guideline_3'               => 'Target the right audience precisely',
+'guideline_4'               => 'Broadcast notifications cannot be undone',
+ 
+'clear_cache'               => 'Clear Cache',
+'optimize'                  => 'Optimize',
+'run_migrations'            => 'Run Migrations',
+'live_stats'                => 'Live Statistics',
+
+
+'title'=> 'title'
 ];

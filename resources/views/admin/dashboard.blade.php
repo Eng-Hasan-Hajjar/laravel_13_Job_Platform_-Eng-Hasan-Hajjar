@@ -20,8 +20,33 @@
         </div>
     </div>
 
+
+    <a href="{{ route('live-stats') }}" 
+   style="display:block;text-decoration:none;margin-bottom:1.5rem">
+    <div class="card" style="background:linear-gradient(135deg,#10b981,#059669);border:none;color:white;cursor:pointer">
+        <div class="card-body" style="display:flex;align-items:center;gap:1.5rem;padding:1.5rem">
+            <div style="font-size:3rem">⚡</div>
+            <div style="flex:1">
+                <h3 style="font-size:1.125rem;font-weight:800;margin-bottom:.25rem">
+                    {{ __('messages.live_statistics') }}
+                </h3>
+                <p style="opacity:.9;font-size:.875rem;margin:0">
+                    Powered by Node.js + Socket.io — Real-time data streaming
+                </p>
+            </div>
+            <div style="background:rgba(255,255,255,.2);padding:.5rem 1rem;border-radius:var(--radius-full);font-weight:700">
+                {{ __('messages.view_live') }} →
+            </div>
+        </div>
+    </div>
+</a>
+
+
+
+
     <!-- System Stats -->
     <div class="grid grid-4" style="margin-bottom:2rem">
+
         @foreach([
             ['label'=>__('messages.total_users'),       'value'=>$stats['users'],        'icon'=>'fa-users',          'color'=>'primary', 'trend'=>'+'.($stats['new_users_today']).' '.__('messages.today')],
             ['label'=>__('messages.total_companies'),   'value'=>$stats['companies'],    'icon'=>'fa-building',       'color'=>'success', 'trend'=>$stats['verified_companies'].' '.__('messages.verified')],
