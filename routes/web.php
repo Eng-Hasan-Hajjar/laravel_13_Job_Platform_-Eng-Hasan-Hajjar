@@ -152,3 +152,6 @@ Route::get('/settings/export-data', [SettingsController::class, 'exportData'])->
 //Route::view('/live-stats', 'live-stats')->name('live-stats')->middleware('auth');
 
 Route::view('/live-stats', 'live-stats')->name('live-stats');
+
+
+Route::post('/{job}/save', [JobController::class, 'save'])->name('save')->middleware('auth');

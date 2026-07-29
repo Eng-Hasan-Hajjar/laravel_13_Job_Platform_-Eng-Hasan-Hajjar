@@ -12,32 +12,43 @@ class Job extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'company_id', 'category_id', 'title', 'slug',
-        'description', 'requirements', 'benefits',
-        'type', 'location', 'is_remote',
-        'salary_min', 'salary_max', 'salary_currency', 'salary_period',
-        'experience_level', 'skills', 'deadline',
-        'is_active', 'is_featured', 'views_count', 'applications_count',
+        'company_id',
+        'category_id',
+        'title',
+        'slug',
+        'description',
+        'requirements',
+        'benefits',
+        'type',
+        'location',
+        'is_remote',
+        'salary_min',
+        'salary_max',
+        'salary_currency',
+        'salary_period',
+        'experience_level',
+        'skills',
+        'deadline',
+        'is_active',
+        'is_featured',
+        'views_count',
+        'applications_count',
     ];
 
     // ── الحل الأساسي: تحويل كل حقول JSON إلى array تلقائياً ──────
     protected $casts = [
-        'skills'          => 'array',   // ← هذا هو سبب الخطأ إذا كان ناقصاً
-        'is_remote'       => 'boolean',
-        'is_active'       => 'boolean',
-        'is_featured'     => 'boolean',
-        'deadline'        => 'datetime',
-        'salary_min'      => 'decimal:2',
-        'salary_max'      => 'decimal:2',
-        'views_count'     => 'integer',
+        'skills' => 'array',   // ← هذا هو سبب الخطأ إذا كان ناقصاً
+        'is_remote' => 'boolean',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'deadline' => 'datetime',
+        'salary_min' => 'decimal:2',
+        'salary_max' => 'decimal:2',
+        'views_count' => 'integer',
         'applications_count' => 'integer',
     ];
 
     // ── Route Model Binding بالـ slug ──────────────────────────────
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 
     // ══════════════════════════════════════════════════════════════
     //  العلاقات
@@ -58,9 +69,13 @@ class Job extends Model
         return $this->hasMany(JobApplication::class);
     }
 
-    public function savedByUsers(): BelongsToMany
+    public function savedByUsers()
     {
-        return $this->belongsToMany(User::class, 'saved_jobs');
+        return $this->belongsToMany(User::class, 'saved_jobs')->withTimestamps();
+    }
+    public function getRouteKeyName(): string
+    {
+        return 'slug'; // ← هذا هو اللي سبب مشكلتنا السابقة
     }
 
     // ══════════════════════════════════════════════════════════════
@@ -70,8 +85,8 @@ class Job extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                     ->where(fn($q) => $q->whereNull('deadline')
-                                         ->orWhere('deadline', '>=', now()));
+            ->where(fn($q) => $q->whereNull('deadline')
+                ->orWhere('deadline', '>=', now()));
     }
 
     public function scopeFeatured($query)
@@ -92,15 +107,16 @@ class Job extends Model
     public function scopeWithSalaryBetween($query, $min, $max)
     {
         return $query->when($min, fn($q) => $q->where('salary_max', '>=', $min))
-                     ->when($max, fn($q) => $q->where('salary_min', '<=', $max));
+            ->when($max, fn($q) => $q->where('salary_min', '<=', $max));
     }
 
     public function scopeSearch($query, string $term)
     {
-        return $query->where(fn($q) => $q
-            ->where('title',       'like', "%{$term}%")
-            ->orWhere('description','like', "%{$term}%")
-            ->orWhere('location',   'like', "%{$term}%")
+        return $query->where(
+            fn($q) => $q
+                ->where('title', 'like', "%{$term}%")
+                ->orWhere('description', 'like', "%{$term}%")
+                ->orWhere('location', 'like', "%{$term}%")
         );
     }
 
@@ -121,8 +137,10 @@ class Job extends Model
     /** تأكد دائماً من إرجاع مصفوفة حتى لو القيمة null أو string */
     public function getSkillsAttribute($value): array
     {
-        if (is_array($value)) return $value;
-        if (empty($value))    return [];
+        if (is_array($value))
+            return $value;
+        if (empty($value))
+            return [];
 
         // إذا كان JSON string
         $decoded = json_decode($value, true);

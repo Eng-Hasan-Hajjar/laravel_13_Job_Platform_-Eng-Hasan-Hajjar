@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
-    public function __construct(private JobRecommendationService $ai) {}
+    public function __construct(private JobRecommendationService $ai)
+    {
+    }
 
     // ══════════════════════════════════════════════════════════════
     //  قائمة الوظائف (صفحة البحث)
@@ -18,22 +20,26 @@ class JobController extends Controller
         $query = Job::query()
             ->active()
             ->with(['company', 'category'])
-            ->when($request->q, fn($q, $s) => $q->where(fn($sub) => $sub
-                ->where('title',       'like', "%{$s}%")
-                ->orWhere('description','like', "%{$s}%")
-                ->orWhereHas('company', fn($c) => $c->where('name', 'like', "%{$s}%"))
+            ->when($request->q, fn($q, $s) => $q->where(
+                fn($sub) => $sub
+                    ->where('title', 'like', "%{$s}%")
+                    ->orWhere('description', 'like', "%{$s}%")
+                    ->orWhereHas('company', fn($c) => $c->where('name', 'like', "%{$s}%"))
             ))
-            ->when($request->location, fn($q, $loc) => $q->where(fn($sub) => $sub
-                ->where('location', 'like', "%{$loc}%")
-                ->orWhere('is_remote', true)
+            ->when($request->location, fn($q, $loc) => $q->where(
+                fn($sub) => $sub
+                    ->where('location', 'like', "%{$loc}%")
+                    ->orWhere('is_remote', true)
             ))
-            ->when($request->category, fn($q, $cat) => $q
-                ->whereHas('category', fn($c) => $c->where('slug', $cat))
+            ->when(
+                $request->category,
+                fn($q, $cat) => $q
+                    ->whereHas('category', fn($c) => $c->where('slug', $cat))
             )
             ->when($request->experience, fn($q, $exp) => $q->where('experience_level', $exp))
             ->when($request->salary_min, fn($q, $min) => $q->where('salary_max', '>=', $min))
             ->when($request->salary_max, fn($q, $max) => $q->where('salary_min', '<=', $max))
-            ->when($request->posted,     fn($q, $d)   => $q->where('created_at', '>=', now()->subDays($d)));
+            ->when($request->posted, fn($q, $d) => $q->where('created_at', '>=', now()->subDays($d)));
 
         // فلتر نوع الوظيفة (checkbox متعدد)
         if ($request->filled('type')) {
@@ -44,13 +50,13 @@ class JobController extends Controller
         // الترتيب
         match ($request->sort ?? 'latest') {
             'salary_high' => $query->orderByDesc('salary_max'),
-            'salary_low'  => $query->orderBy('salary_min'),
-            default       => $query->latest(),
+            'salary_low' => $query->orderBy('salary_min'),
+            default => $query->latest(),
         };
 
-        $jobs       = $query->paginate(15)->withQueryString();
+        $jobs = $query->paginate(15)->withQueryString();
         $categories = Category::active()->withCount('jobs')->get();
-        $locations  = Job::active()->distinct()->pluck('location')->filter()->values();
+        $locations = Job::active()->distinct()->pluck('location')->filter()->values();
 
         return view('jobs.index', compact('jobs', 'categories', 'locations'));
     }
@@ -77,11 +83,11 @@ class JobController extends Controller
             ->get();
 
         $hasApplied = false;
-        $hasSaved   = false;
+        $hasSaved = false;
 
         if (auth()->check() && auth()->user()->isUser()) {
             $hasApplied = auth()->user()->hasAppliedTo($job);
-            $hasSaved   = auth()->user()->hasSaved($job);
+            $hasSaved = auth()->user()->hasSaved($job);
         }
 
         return view('jobs.show', compact('job', 'similarJobs', 'hasApplied', 'hasSaved'));
@@ -107,10 +113,10 @@ class JobController extends Controller
         }
 
         $request->validate([
-            'cover_letter'    => 'required|string|min:30|max:3000',
-            'cv_file'         => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cover_letter' => 'required|string|min:30|max:3000',
+            'cv_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             'expected_salary' => 'nullable|numeric|min:0',
-            'availability'    => 'nullable|in:immediately,two_weeks,one_month,negotiable',
+            'availability' => 'nullable|in:immediately,two_weeks,one_month,negotiable',
         ]);
 
         // تحديد مسار الـ CV
@@ -126,12 +132,12 @@ class JobController extends Controller
         }
 
         $application = $job->applications()->create([
-            'user_id'         => $user->id,
-            'status'          => 'pending',
-            'cover_letter'    => $request->cover_letter,
-            'cv_path'         => $cvPath,
+            'user_id' => $user->id,
+            'status' => 'pending',
+            'cover_letter' => $request->cover_letter,
+            'cv_path' => $cvPath,
             'expected_salary' => $request->expected_salary,
-            'availability'    => $request->availability ?? 'negotiable',
+            'availability' => $request->availability ?? 'negotiable',
         ]);
 
         // إشعار الشركة
@@ -152,44 +158,37 @@ class JobController extends Controller
     // ══════════════════════════════════════════════════════════════
     public function save(Job $job)
     {
+        abort_if(!auth()->user()->isUser(), 403);
+
         $user = auth()->user();
-
-        if (!$user || !$user->isUser()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
         if ($user->hasSaved($job)) {
             $user->savedJobs()->detach($job->id);
             $saved = false;
+            $message = __('messages.job_unsaved');
         } else {
             $user->savedJobs()->attach($job->id);
             $saved = true;
+            $message = __('messages.job_saved');
         }
 
-        return response()->json([
-            'saved'   => $saved,
-            'message' => $saved
-                ? __('messages.job_saved')
-                : __('messages.job_unsaved'),
-        ]);
+        return response()->json(compact('saved', 'message'));
     }
-
     // ══════════════════════════════════════════════════════════════
     //  الوظائف المقترحة (AI)
     // ══════════════════════════════════════════════════════════════
     public function recommended(Request $request)
     {
-        $user  = auth()->user();
+        $user = auth()->user();
         $useAI = $request->boolean('ai', true);
 
         $jobs = $this->ai->recommend($user, 20, $useAI);
 
         $profileStats = [
             'skills_count' => count($user->skills ?? []),
-            'cv_analyzed'  => !empty($user->cv_analyzed),
-            'cv_score'     => $user->cv_analyzed['score'] ?? 0,
+            'cv_analyzed' => !empty($user->cv_analyzed),
+            'cv_score' => $user->cv_analyzed['score'] ?? 0,
             'location_set' => !empty($user->location),
-            'prefs_set'    => !empty($user->preferred_job_types),
+            'prefs_set' => !empty($user->preferred_job_types),
             'completeness' => $this->completeness($user),
         ];
 
@@ -199,40 +198,40 @@ class JobController extends Controller
     // API للـ infinite scroll
     public function recommendedApi(Request $request)
     {
-        $user    = auth()->user();
-        $useAI   = $request->boolean('ai', true);
-        $page    = max(1, $request->integer('page', 1));
+        $user = auth()->user();
+        $useAI = $request->boolean('ai', true);
+        $page = max(1, $request->integer('page', 1));
         $perPage = 6;
 
-        $all   = $this->ai->recommend($user, 60, $useAI);
+        $all = $this->ai->recommend($user, 60, $useAI);
         $items = $all->slice(($page - 1) * $perPage, $perPage)->values();
 
         return response()->json([
-            'jobs'     => $items->map(fn($j) => [
-                'id'          => $j->id,
-                'title'       => $j->title,
-                'company'     => $j->company->name,
-                'logo'        => $j->company->logo ? asset('storage/' . $j->company->logo) : null,
-                'location'    => $j->location,
-                'type'        => $j->type,
-                'ai_score'    => $j->ai_score    ?? 0,
-                'ai_reasons'  => $j->ai_reasons  ?? [],
+            'jobs' => $items->map(fn($j) => [
+                'id' => $j->id,
+                'title' => $j->title,
+                'company' => $j->company->name,
+                'logo' => $j->company->logo ? asset('storage/' . $j->company->logo) : null,
+                'location' => $j->location,
+                'type' => $j->type,
+                'ai_score' => $j->ai_score ?? 0,
+                'ai_reasons' => $j->ai_reasons ?? [],
                 'skill_match' => $j->skill_match_pct ?? 0,
-                'salary_min'  => $j->salary_min,
-                'salary_max'  => $j->salary_max,
-                'is_remote'   => $j->is_remote,
-                'url'         => route('jobs.show', $j->slug),
+                'salary_min' => $j->salary_min,
+                'salary_max' => $j->salary_max,
+                'is_remote' => $j->is_remote,
+                'url' => route('jobs.show', $j->slug),
             ]),
             'has_more' => $all->count() > $page * $perPage,
-            'total'    => $all->count(),
-            'page'     => $page,
+            'total' => $all->count(),
+            'page' => $page,
         ]);
     }
 
     // ── helper ────────────────────────────────────────────────────
     private function completeness(object $user): int
     {
-        $fields = ['name','email','phone','location','bio','cv_path','skills','experience_level','avatar'];
+        $fields = ['name', 'email', 'phone', 'location', 'bio', 'cv_path', 'skills', 'experience_level', 'avatar'];
         $filled = count(array_filter($fields, fn($f) => !empty($user->$f)));
         return (int) round(($filled / count($fields)) * 100);
     }

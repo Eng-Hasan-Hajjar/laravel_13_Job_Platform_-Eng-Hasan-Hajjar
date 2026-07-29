@@ -3,7 +3,7 @@
     $jobSkills = is_array($job->skills) ? $job->skills : [];
 @endphp
 
-<div class="card" style="transition:var(--transition)">
+<div class="card" style="transition:var(--transition);position:relative">
     <div class="card-body">
         <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap">
             {{-- Logo --}}
@@ -18,6 +18,13 @@
 
             {{-- Info --}}
             <div style="flex:1;min-width:0;overflow:hidden">
+                {{-- Featured Badge --}}
+                @if($job->is_featured)
+                <span style="display:inline-flex;align-items:center;gap:.25rem;font-size:.7rem;font-weight:700;color:var(--warning);background:rgba(245,158,11,.1);padding:.2rem .6rem;border-radius:var(--radius-full);margin-bottom:.4rem">
+                    <i class="fas fa-star"></i> {{ __('messages.featured') }}
+                </span>
+                @endif
+
                 <h3 style="font-size:.95rem;font-weight:700;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
                     <a href="{{ route('jobs.show', $job) }}" style="text-decoration:none;color:var(--text-primary)">
                         {{ $job->title }}
@@ -81,11 +88,68 @@
                     <span style="font-size:.75rem;color:var(--text-muted)">
                         <i class="fas fa-clock"></i> {{ $job->created_at->diffForHumans() }}
                     </span>
-                    <a href="{{ route('jobs.show', $job) }}" class="btn btn-outline btn-sm" style="font-size:.75rem">
-                        {{ __('messages.view_details') }}
-                    </a>
+                    <div style="display:flex;gap:.5rem">
+                        @auth
+                        @if(auth()->user()->role === 'user')
+                            @if(auth()->user()->hasAppliedTo($job))
+                            <span class="btn btn-ghost btn-sm" style="cursor:default;color:var(--success);font-size:.75rem">
+                                <i class="fas fa-check"></i> {{ __('messages.applied') }}
+                            </span>
+                            @else
+                            <a href="{{ route('jobs.show', $job) }}" class="btn btn-primary btn-sm" style="font-size:.75rem">
+                                {{ __('messages.apply_now') }}
+                            </a>
+                            @endif
+                        @endif
+                        @endauth
+                        <a href="{{ route('jobs.show', $job) }}" class="btn btn-outline btn-sm" style="font-size:.75rem">
+                            {{ __('messages.view_details') }}
+                        </a>
+                    </div>
                 </div>
             </div>
+
+            {{-- Save/Bookmark Button --}}
+            @auth
+            @if(auth()->user()->role === 'user')
+            <button class="nav-icon-btn save-job-btn {{ auth()->user()->savedJobs->contains($job->id) ? 'saved' : '' }}"
+                    data-job-id="{{ $job->slug }}"
+                    data-tooltip="{{ __('messages.save_job') }}"
+                    onclick="toggleSaveJob(this, '{{ $job->slug }}')"
+                    style="flex-shrink:0;{{ auth()->user()->savedJobs->contains($job->id) ? 'color:var(--primary);border-color:var(--primary)' : '' }}">
+                <i class="fas fa-bookmark"></i>
+            </button>
+            @endif
+            @endauth
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function toggleSaveJob(btn, jobSlug) {
+    fetch(`/jobs/${jobSlug}/save`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.saved) {
+            btn.style.color = 'var(--primary)';
+            btn.style.borderColor = 'var(--primary)';
+            toastr.success(data.message);
+        } else {
+            btn.style.color = '';
+            btn.style.borderColor = '';
+            toastr.info(data.message);
+        }
+    })
+    .catch(() => {
+        toastr.error('{{ __("messages.error_occurred") }}');
+    });
+}
+</script>
+@endpush
