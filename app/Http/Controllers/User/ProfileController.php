@@ -138,6 +138,11 @@ class ProfileController extends Controller
     return back()->with('success', __('messages.cv_uploaded_success'));
 }
  
+
+public function cvPage()
+{
+    return view('user.cv');
+}
     public function downloadCv()
     {
         $user = auth()->user();
