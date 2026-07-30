@@ -9,11 +9,7 @@
             <h1 style="font-size:1.5rem;font-weight:800;margin-bottom:.25rem">{{ __('messages.all_applications') }}</h1>
             <p style="color:var(--text-secondary);font-size:.875rem">{{ $applications->total() }} {{ __('messages.total_applications') }}</p>
         </div>
-        <!-- Export -->
-        <a href="{{ route('company.applications.index', array_merge(request()->all(), ['export' => 'csv'])) }}"
-           class="btn btn-ghost btn-sm">
-            <i class="fas fa-download"></i> {{ __('messages.export_csv') }}
-        </a>
+        
     </div>
 
     <!-- Stats Row -->

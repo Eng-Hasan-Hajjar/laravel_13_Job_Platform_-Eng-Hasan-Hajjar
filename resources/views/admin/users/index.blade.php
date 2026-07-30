@@ -15,9 +15,9 @@
     <div class="card" style="margin-bottom:1.25rem">
         <div class="card-body" style="padding:.875rem 1.25rem">
             <form method="GET" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
-                <input type="text" name="search" class="form-control" style="width:250px"
-                       placeholder="{{ __('messages.search_by_name_email') }}"
-                       value="{{ request('search') }}">
+                <input type="text" name="q" class="form-control" style="width:250px"
+                        placeholder="{{ __('messages.search_by_name_email') }}"
+                        value="{{ request('q') }}">
                 <select name="role" class="form-control" style="width:auto" onchange="this.form.submit()">
                     <option value="">{{ __('messages.all_roles') }}</option>
                     <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>{{ __('messages.job_seeker') }}</option>
@@ -30,7 +30,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                 </select>
                 <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
-                @if(request()->hasAny(['search','role','status']))
+                @if(request()->hasAny(['q','role','status']))
                 <a href="{{ route('admin.users.index') }}" class="btn btn-ghost btn-sm">{{ __('messages.reset') }}</a>
                 @endif
             </form>

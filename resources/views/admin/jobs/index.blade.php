@@ -14,8 +14,8 @@
     <div class="card" style="margin-bottom:1.25rem">
         <div class="card-body" style="padding:.875rem 1.25rem">
             <form method="GET" style="display:flex;gap:.625rem;flex-wrap:wrap;align-items:center">
-                <input type="text" name="search" class="form-control" style="width:220px"
-                       placeholder="{{ __('messages.search_jobs') }}" value="{{ request('search') }}">
+                <input type="text" name="q" class="form-control" style="width:220px"
+                     placeholder="{{ __('messages.search_jobs') }}" value="{{ request('q') }}">
                 <select name="type" class="form-control" style="width:auto" onchange="this.form.submit()">
                     <option value="">{{ __('messages.all_types') }}</option>
                     @foreach(['full-time','part-time','freelance','remote','internship'] as $t)
@@ -30,7 +30,7 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                 </select>
                 <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
-                @if(request()->hasAny(['search','type','status']))
+                @if(request()->hasAny(['q','type','status']))
                 <a href="{{ route('admin.jobs.index') }}" class="btn btn-ghost btn-sm">{{ __('messages.reset') }}</a>
                 @endif
             </form>
@@ -75,7 +75,7 @@
                             </span>
                         </td>
                         <td>
-                            <button onclick="toggleFeatured({{ $job->id }}, this)"
+                            <button onclick="toggleFeatured('{{ $job->slug }}', this)"
                                     class="btn btn-sm {{ $job->is_featured ? 'btn-warning' : 'btn-ghost' }}"
                                     style="padding:.25rem .625rem;font-size:.75rem">
                                 <i class="fas fa-star"></i> {{ $job->is_featured ? __('messages.featured') : __('messages.feature') }}
