@@ -893,5 +893,14 @@ return [
 'live_stats'                => 'Live Statistics',
 
 
-'title'=> 'title'
+'title'=> 'title',
+'connecting'          => 'Connecting...',
+'connected_to_server'  => 'Connected to Node.js Server',
+'disconnected'         => 'Disconnected',
+'last_update'          => 'Last update',
+'recent_jobs_live'     => 'Recent Jobs (Live)',
+
+'notification_sent_to' => 'Notification sent to :count users.',
+
+
 ];

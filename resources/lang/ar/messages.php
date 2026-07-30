@@ -906,5 +906,14 @@ return [
  
 
 
-'title'=> 'عنوان'
+'title'=> 'عنوان',
+
+
+'connecting'          => 'جارٍ الاتصال...',
+'connected_to_server'  => 'متصل بسيرفر Node.js',
+'disconnected'         => 'انقطع الاتصال',
+'last_update'          => 'آخر تحديث',
+'recent_jobs_live'     => 'أحدث الوظائف (مباشر)',
+'notification_sent_to' => 'تم إرسال الإشعار إلى :count مستخدم بنجاح.',
+
 ];

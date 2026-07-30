@@ -70,39 +70,39 @@ class CompanyController extends Controller
     // ══════════════════════════════════════════════════════════════
     //  إضافة تقييم للشركة
     // ══════════════════════════════════════════════════════════════
-    public function review(Request $request, Company $company)
-    {
-        $user = auth()->user();
+   public function review(Request $request, Company $company)
+{
+    $user = auth()->user();
 
-        // المستخدمون فقط (ليس الشركات أو المشرفون)
-        if (!$user->isUser()) {
-            return back()->with('error', __('messages.only_users_can_review'));
-        }
-
-        // منع التقييم المكرر
-        if ($company->reviews()->where('user_id', $user->id)->exists()) {
-            return back()->with('error', __('messages.already_reviewed'));
-        }
-
-        $validated = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'title'  => 'required|string|max:200',
-            'body'   => 'required|string|min:10|max:2000',
-            'pros'   => 'nullable|string|max:1000',
-            'cons'   => 'nullable|string|max:1000',
-        ]);
-
-        $company->reviews()->create([
-            'user_id'       => $user->id,
-            'reviewer_name' => $request->boolean('anonymous') ? __('messages.anonymous') : $user->name,
-            'rating'        => $validated['rating'],
-            'title'         => $validated['title'],
-            'body'          => $validated['body'],
-            'pros'          => $validated['pros'] ?? null,
-            'cons'          => $validated['cons'] ?? null,
-            'is_approved'   => false, // تتطلب موافقة المشرف
-        ]);
-
-        return back()->with('success', __('messages.review_submitted'));
+    // المستخدمون فقط (ليس الشركات أو المشرفون)
+    if (!$user->isUser()) {
+        return back()->with('error', __('messages.only_users_can_review'));
     }
+
+    // منع التقييم المكرر
+    if ($company->reviews()->where('user_id', $user->id)->exists()) {
+        return back()->with('error', __('messages.already_reviewed'));
+    }
+
+    $validated = $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'title'  => 'required|string|max:200',
+        'body'   => 'required|string|min:10|max:2000',
+        'pros'   => 'nullable|string|max:1000',
+        'cons'   => 'nullable|string|max:1000',
+    ]);
+
+    $company->reviews()->create([
+        'user_id'      => $user->id,
+        'is_anonymous' => $request->boolean('is_anonymous'),
+        'rating'       => $validated['rating'],
+        'title'        => $validated['title'],
+        'body'         => $validated['body'],
+        'pros'         => $validated['pros'] ?? null,
+        'cons'         => $validated['cons'] ?? null,
+        'is_approved'  => false, // تتطلب موافقة المشرف
+    ]);
+
+    return back()->with('success', __('messages.review_submitted'));
+}
 }

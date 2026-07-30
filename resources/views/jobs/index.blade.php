@@ -210,7 +210,7 @@
                                     {{-- Save Button --}}
                                     @auth
                                     @if(auth()->user()->isUser())
-                                    <button onclick="toggleSave({{ $job->id }}, this)"
+                                    <button onclick="toggleSave('{{ $job->slug }}', this)"
                                             class="btn btn-ghost btn-sm {{ auth()->user()->hasSaved($job) ? 'saved' : '' }}"
                                             style="color:{{ auth()->user()->hasSaved($job) ? 'var(--warning)' : 'var(--text-muted)' }}"
                                             data-tooltip="{{ __('messages.save_job') }}">
