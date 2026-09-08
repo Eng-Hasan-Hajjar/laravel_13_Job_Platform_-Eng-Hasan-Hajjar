@@ -189,6 +189,8 @@ class DatabaseSeeder extends Seeder
             'is_active'        => true,
         ]);
  
+
+ 
         $this->command->info('✅ Database seeded successfully! Login: admin@jobportal.com / password');
     }
 }
